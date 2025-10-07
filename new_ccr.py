@@ -1,10 +1,3 @@
-# xrates_current_month.py
-# Build a month block (e.g., "2025-October") using ONLY x-rates.com.
-# "conversion" = USD per 1 unit of the listed currency.
-# Extras:
-#  - If PAB (Panama) isn't present in x-rates, default to 1.0
-#  - Append/merge into existing CSV/XLSX using unique key "conversion year-month-currency"
-
 import re
 from pathlib import Path
 from datetime import date, datetime
@@ -112,10 +105,7 @@ def fetch_xrates_usd_to_quotes() -> dict:
     return rates  # USD->C
 
 def build_rows_for_current_month(usd_to_c: dict):
-    """
-    Convert USD->C to USD per 1 currency (invert), and build rows
-    for a single block: current year & month (e.g., 2025-October).
-    """
+
     today = date.today()
     label = ym_label(today.year, today.month)   # e.g., "2025-October"
     year, month_name = label.split("-")
@@ -143,11 +133,7 @@ def build_rows_for_current_month(usd_to_c: dict):
     return rows
 
 def merge_and_write(df_new: pd.DataFrame, csv_path: Path, xlsx_path: Path):
-    """
-    Append only truly new keys into existing CSV/XLSX files.
-    Key = 'conversion year-month-currency'.
-    Existing rows are kept as-is (no overwrite).
-    """
+
     key = "conversion year-month-currency"
 
     # Start from df_new
